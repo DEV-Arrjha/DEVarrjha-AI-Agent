@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f19">
+<title>DEVarrjha AI Agent</title>
+
+<style>
+:root {
+  --bg: #0b0f19;
+  --panel: #111827;
+  --panel2: #151e2e;
+  --border: #253047;
+  --text: #edf2ff;
+  --muted: #8e9bb4;
+  --green: #35d39a;
+  --purple: #9a83ff;
+  --red: #ff6b81;
+  --yellow: #ffc66d;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 245px;
+  padding: 22px 15px;
+  background: #0e1421;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 5px 8px 25px;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #35d39a, #7161f6);
+  color: white;
+  font-weight: 900;
+  font-size: 19px;
+}
+
+.brand h1 {
+  font-size: 15px;
+  letter-spacing: .3px;
+}
+
+.brand p {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.nav-label {
+  color: #687790;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin: 22px 10px 10px;
+}
+
+.nav-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #a9b5cb;
+  border-radius: 10px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: #192438;
+  color: var(--green);
+  border-color: #283b4c;
+}
+
+.nav-icon {
+  width: 20px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.sidebar-bottom {
+  margin-top: 30px;
+  padding: 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+}
+
+.sidebar-bottom strong {
+  font-size: 12px;
+}
+
+.sidebar-bottom p {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+.main {
+  min-width: 0;
+  flex: 1;
+}
+
+.topbar {
+  min-height: 70px;
+  padding: 15px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar h2 {
+  font-size: 19px;
+}
+
+.topbar p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.top-right {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.badge {
+  padding: 7px 10px;
+  background: #20283a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--yellow);
+  font-size: 11px;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  background: #26364b;
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.content {
+  padding: 27px;
+  max-width: 1450px;
+  margin: auto;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.welcome {
+  padding: 25px;
+  border: 1px solid #294b4b;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at top right, #183d40 0%, transparent 55%),
+    linear-gradient(120deg, #142231, #12192a);
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.welcome h3 {
+  font-size: clamp(22px, 3vw, 30px);
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  color: #aab8ce;
+  line-height: 1.8;
+  font-size: 13px;
+  max-width: 650px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 23px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 18px;
+  min-width: 0;
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-icon {
+  font-size: 20px;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 15px;
+  overflow-wrap: anywhere;
+}
+
+.stat-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+
+.green { color: var(--green); }
+.purple { color: var(--purple); }
+.yellow { color: var(--yellow); }
+.red { color: var(--red); }
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 25px 0 14px;
+}
+
+.section-heading h3 {
+  font-size: 16px;
+}
+
+.section-heading p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 16px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child {
+  border-bottom: 0;
+}
+
+.activity-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #202a3d;
+  display: grid;
+  place-items: center;
+}
+
+.activity-item strong {
+  font-size: 12px;
+}
+
+.activity-item p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 4px;
+}
+
+.panel-title {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.field {
+  margin-top: 17px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #b6c3d9;
+  margin-bottom: 8px;
+}
+
+.input, textarea, select {
+  width: 100%;
+  color: var(--text);
+  background: #0c1320;
+  border: 1px solid #2b374d;
+  border-radius: 9px;
+  padding: 12px;
+  outline: none;
+}
+
+.input:focus, textarea:focus, select:focus {
+  border-color: var(--green);
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+select option {
+  background: var(--panel);
+}
+
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #202b3e;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn:hover {
+  filter: brightness(1.15);
+}
+
+.btn-primary {
+  color: #071b15;
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.btn-danger {
+  background: #3b202b;
+  color: #ff9cab;
+  border-color: #69303f;
+}
+
+.btn-purple {
+  background: #30264e;
+  color: #c5b8ff;
+  border-color: #51417b;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.result {
+  margin-top: 17px;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #315344;
+  background: #12251f;
+  font-size: 12px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.notice {
+  padding: 13px;
+  background: #29251b;
+  border: 1px solid #59482a;
+  border-radius: 10px;
+  color: #f0d49d;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 17px;
+}
+
+.item-list {
+  display: grid;
+  gap: 11px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 14px;
+}
+
+.list-item h4 {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.list-item p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+.small-btn {
+  padding: 7px 10px;
+  flex-shrink: 0;
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 25px 10px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.footer {
+  text-align: center;
+  padding: 25px 10px;
+  color: #62708a;
+  font-size: 10px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    width: 215px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .layout {
+    display: block;
+  }
+
+  .sidebar {
+    display: none;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar.open {
+    display: block;
+  }
+
+  .mobile-menu {
+    display: inline-flex;
+  }
+
+  .topbar {
+    padding: 14px;
+  }
+
+  .topbar h2 {
+    font-size: 15px;
+  }
+
+  .topbar p {
+    font-size: 10px;
+  }
+
+  .content {
+    padding: 14px;
+  }
+
+  .welcome {
+    padding: 19px;
+  }
+
+  .row {
+    gap: 10px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .stat-number {
+    font-size: 23px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 6px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">D</div>
+      <div>
+        <h1>DEVarrjha AI</h1>
+        <p>Agent Management Hub</p>
+      </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <button class="nav-btn active" data-page="dashboard">
+      <span class="nav-icon">▦</span> Dashboard
+    </button>
+    <button class="nav-btn" data-page="command">
+      <span class="nav-icon">✳</span> AI Command Center
+    </button>
+    <button class="nav-btn" data-page="approvals">
+      <span class="nav-icon">🛡</span> Approval Center
+    </button>
+    <button class="nav-btn" data-page="assets">
+      <span class="nav-icon">▣</span> Asset Repository
+    </button>
+    <button class="nav-btn" data-page="logs">
+      <span class="nav-icon">☷</span> Activity Logs
+    </button>
+
+    <div class="nav-label">SYSTEM</div>
+
+    <button class="nav-btn" data-page="monitoring">
+      <span class="nav-icon">◉</span> Monitoring
+    </button>
+    <button class="nav-btn" data-page="settings">
+      <span class="nav-icon">⚙</span> Settings
+    </button>
+
+    <div class="sidebar-bottom">
+      <strong><span class="status-dot"></span>Demo Mode Active</strong>
+      <p>Panel berjalan secara lokal di browser. Backend dan AI API belum terhubung.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn mobile-menu" id="menuBtn" aria-label="Buka menu">☰</button>
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p>DEVarrjha AI Agent / Workspace</p>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <span class="badge">DEMO VERSION</span>
+        <div class="avatar">D</div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+
+        <div class="welcome">
+          <div class="eyebrow">YOUR AI WORKSPACE</div>
+          <h3>Welcome to your command center.</h3>
+          <p>
+            Kelola aset, uji perintah AI, tinjau permintaan tindakan,
+            dan pantau aktivitas sistem dalam satu dashboard.
+            Semua fitur saat ini menggunakan mode demo.
+          </p>
+          <div class="button-row">
+            <button class="btn btn-primary" data-go="command">✳ Buka AI Command</button>
+            <button class="btn" data-go="assets">+ Kelola Aset</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-label">Total Aset</span>
+              <span class="stat-icon">▣</span>
+            </div>
+            <div class="stat-number" id="statAssets">0</div>
+            <div class="stat-note">Aset yang tercatat</div>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-label">Menunggu Persetujuan</span>
+              <span class="stat-icon">🛡</span>
+            </div>
+            <div class="stat-number yellow" id="statApprovals">0</div>
+            <div class="stat-note">Permintaan belum ditinjau</div>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-label">Aktivitas</span>
+              <span class="stat-icon">☷</span>
+            </div>
+            <div class="stat-number purple" id="statLogs">0</div>
+            <div class="stat-note">Catatan dalam demo</div>
+          </div>
+
+          <div class="card">
+            <div class="stat-top">
+              <span class="stat-label">AI Connection</span>
+              <span class="stat-icon">✳</span>
+            </div>
+            <div class="stat-number" style="font-size:20px;color:var(--yellow)">Offline
